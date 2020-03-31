@@ -8,11 +8,18 @@ https://www.worldometers.info/coronavirus/country/us/
 Predictions_for_COVID19-inspired pandemic game that would work as text-based choose-your-own-adventure
 
 It addresses:
-
 current number of cases per state
-
 rate of new cases per day
-
 how many days it would take to defeat the virus with self isolation
-
 predict how many more cases it would take if there is no self isolation
+
+Functional/Non-functional requirements:
+  functional
+    greets the user
+    calculates the preparation time, rate of cases per day, calculated time for isolation to work
+    asks for input decisions
+  non-functional
+    server must dispaly text within 10 seconds of input
+    
+Data set:
+  Ideal: Population number, rate of confirmed cases
