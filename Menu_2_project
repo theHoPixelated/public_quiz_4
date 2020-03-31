@@ -1,0 +1,373 @@
+# Kim :)
+
+from pathlib import Path
+import csv
+
+#in_file = Path()
+
+def get_user_path() -> Path:
+    prompt = ("Enter the path of the menu.csv: \n" + \
+              "Example: c:Users\Project2\Menu\costa_menus\Menu(2).csv")  
+    while True:
+        user_path = input(prompt)
+        user_path = Path(user_path)
+        try:
+            assert user_path.exists() == True, \
+                   "get_user_path() - File does not exist"
+        except:
+            print("That is not a valid Path")
+        else:
+            break
+    return user_path
+
+def add_menu_csv(import_file: Path) -> str:
+    '''
+    reads the menu csv and adds the title to list of menus
+    '''
+    with open(import_file, 'r') as in_file:
+        for line in in_file:
+            menu_list = str(line)
+    return menu_list
+
+rest_menu_file = "costa_restaurants.txt"
+support_file = "menu_index.txt"
+
+def read_file_lines(filename:str) -> list:
+    '''
+    function to take filename and returns files contents
+    returns list[]
+    '''
+    restaurant_list = [] #placeholder
+    
+    try:
+        with open(filename) as restaurant_info:
+            for each in restaurant_info:
+                str_elem = each.strip('\n').split(", ")
+                restaurant_list.append(str_elem)
+    except FileNotFoundError:           
+        new_filename = input("File is not found. Please recheck file name.")
+        restaurant_list = read_file_lines(new_filename)
+    
+    return restaurant_list
+
+
+def main_file_infile() -> list:
+    '''
+    rest_menu_file = "costa_restaurants.txt"
+    '''
+    rest_main_list = []
+    rest_main_list = read_file_lines(rest_menu_file)
+    
+    return rest_main_list
+
+
+# global variable: main_list
+main_list = main_file_infile()
+support_list = read_file_lines(support_file)
+
+
+def merge_list(list_1:list, list_2:list) -> list:
+    '''
+    adds list_2 to list_1 and returns list_1 
+    '''     
+    for lis in list_2:
+        list_1.append(lis)
+        
+    return list_1
+
+
+def duplicates(list_:list, elem:str) -> bool:
+    '''
+    checks for duplicates in the list
+    returns true if duplicate
+    '''
+    repeat = False
+    for each in list_:
+        if(elem.casefold() == each[0].casefold()):
+            print("Your restaurant name is already in our list")
+            repeat = True
+            break
+        
+    return repeat
+
+
+def faulty_data(check_list:list) -> bool:
+    '''
+    recieves user list
+    returns true if the data is faulty
+    '''
+    if not str(check_list[0]):
+        print("Empty restaurant name.")
+        return True
+        
+    zip_code = check_list[2].isdigit()
+    length = len(check_list[2])
+    if zip_code and length != 5 or not zip_code and length != 0:
+        print(check_list[2])
+        print("Incorrect zip.")
+        return True
+
+    for i in range(3,6):
+        if check_list[i] != 'yes' and check_list[i] != 'no':
+            print(check_list[3:6])
+            print("Must be yes or no.")
+            return True
+            
+    return False
+
+def user_input() -> list:
+    '''
+    adds lists from user
+    uses function duplicates to check for repeats
+    if already in list, does not add
+    '''
+    restaurant = input('Restaurant: ')
+    zip_code = input('Zip code: (optional, if none press enter)')
+    vegetarian = input('Vegetarian? (yes/no)')
+    vegan = input('Vegan? (yes/no)')
+    gluten_free = input('Gluten_free? (yes/no)')
+    
+    new_list = [str(restaurant), '', str(zip_code), str(vegetarian), \
+                str(vegan), str(gluten_free), '']
+    
+    return new_list
+
+
+def user_list_of_lists(file_list:list) -> list:
+    '''
+    adds lists
+    asks the user if they want to continue
+    checks for duplicates
+    appends to user's list
+    '''
+    complete_user_list = [] 
+
+    try_again = "y"
+    while try_again == "y":
+        adding_list = user_input()
+        
+        for each in adding_list:
+            if faulty_data(adding_list):
+                print("\nTry again ")
+                adding_list = user_input()
+
+        if not duplicates(file_list, adding_list[0]):
+            complete_user_list.append(adding_list)
+        
+        try_again = input("Do you want to add more? (y) or press" + \
+                          " any key to stop")
+
+    return complete_user_list
+
+
+def greetings() -> list:
+    '''
+    greets user
+    no param, no return
+    '''
+    print("Hello business owner! Want to add a restaurant?")
+    print("Enter the name of the restaurant, zip code, and if it \n" + \
+          "serves vegetarian, vegan, or gluten-free options.\n")
+
+
+def print_list(list_1:list) -> None:
+    print("\n")
+    for each in list_1:
+        print(each)
+    print("\n")
+
+
+def eat_tonight_program():
+    '''
+    function
+    1. reads main restaurant file and creates list
+    2. greets user
+    3. creates user added list (user_list)
+    4. merges user_list into main_list
+    '''    
+    print("\nWhere should we eat tonight?\n---")
+
+    print_list(main_file_infile())
+    
+    greetings()
+
+    global main_list
+    users_list = user_list_of_lists(main_list)
+    print_list(users_list)
+
+    print("Updated list!")
+    main_list = merge_list(main_list, users_list)
+    
+    global support_list
+    elem = []
+    for each in users_list:
+        elem = [each[0], '']
+        support_list.append(elem)
+
+    print("Main_list")    
+    print_list(main_list)
+    print("Support_list")
+    print_list(support_list)
+
+
+'''
+Project 2: Menu's please
+Everything above this is the quiz 4 base code.
+'''
+
+print("------------------------------------------")
+print("I fixed the quiz code and then I added the")
+print('menu program. Added the folder costa_menus.')
+print("Added the path and import function.")
+print("NOTE: I had a hard time with the pdfs so I ")
+print("settled for .csv. ")
+print("------------------------------------------")
+
+    
+def menu_greetings():
+    '''
+    greets the owner and asks for menu
+    '''
+    print("\nHello business owner! Did you want to add a menu?")
+
+
+def correct_menu_string(rest_name:str):
+    '''
+    checks for restaurant name and makes sure it exists
+    '''
+    global main_list
+    try:
+        for each in main_list:
+            if rest_name in each:
+                return True
+        return False
+    except ValueError:
+        print("\nWrong name. NOTE: It's case sensitive!")
+        return False
+
+def faulty_support(data:str) -> bool:
+    '''
+    checks the str to make sure menu.csv has not already been used
+    '''
+    global support_list
+    for each in support_list:
+        if data in each[1]:
+            return False
+    return True
+
+def menu_list_update(rest_name:str):
+    '''
+    marks restaurant as recieved
+    '''
+    global main_list
+    global support_file
+
+    for each in main_list:
+        if rest_name in each:
+            indx = main_list.index(each)
+
+    print("Index of restaurant is " + str(indx))
+    main_list[indx][6] = 'recieved'
+
+    try_again = 'y'
+    while try_again == 'y':
+        in_file = get_user_path()
+        csv_data = add_menu_csv(in_file)
+        csv_data += '.csv'
+
+        if faulty_support(csv_data):
+            support_list[indx][1] = (csv_data)
+            try_again = 'n'
+        else:
+            print("File already exist! Use a new file.") 
+    
+def three_options(choice:str):
+    '''
+    0. view restaurants
+    1. add new restaurant
+    2. add menu
+    '''
+    global main_list
+    
+    if choice == '1':
+        eat_tonight_program()
+    elif choice == '2':
+        print_list(main_list)
+        restaurant = input("Which restaurant would you like to " + \
+                           "add a menu for?")
+        if correct_menu_string(str(restaurant)):
+            menu_list_update(restaurant)
+        else:
+            print("\nWrong name. NOTE: It's case sensitive!")
+            three_options(choice)
+
+
+def faulty_key(choice:str) -> bool:
+    '''
+    recieves main_menu input
+    if int 0-3, return True
+    '''
+    if choice.isdigit():
+        return int(choice) < 3
+    
+    return False
+
+
+def main_menu() -> str:
+    '''
+    user, new user
+    add menu to existing restaurant
+    add restaurant
+    view list of existing restaurants
+    '''
+
+    menu_options_list = ["view existing restaurants", \
+                    "register a new restaurant", \
+                    "add a menu to an existing restaurant"]
+    #double check range
+    for i in range(3):
+        print("press (" + str(i) + ") to " + menu_options_list[i])
+    
+    user_option = input("\nEnter number: ")
+    
+    if faulty_key(user_option):
+        return user_option
+    else:
+        print("Failed to enter number (0/1/2). Try again.\n")
+        main_menu()
+
+
+def return_to_main(return_:str):
+    if return_ == 'y':
+        menu_program()
+
+def menu_program():
+    '''
+    menu function
+    1. greets user
+    2. main menu
+    2.5. main menu faulty data
+    3. bool options
+        a. add menu
+        b. add restaurant -> calls eat tonight program
+    4. add the menu -> faulty data (must be .csv)
+    '''
+    menu_greetings()
+    
+    choice = main_menu()
+    
+    three_options(choice)
+    
+    print_list(main_list)
+    print_list(support_list)
+
+    main_menu_continue = input("Would you like to return to main" + \
+                               " menu? (y) to continue to main menu" + \
+                               "\nor press [enter] to exit.")
+    return_to_main(main_menu_continue)
+
+
+if __name__ == "__main__":
+    #eat_tonight_program()
+    menu_program()
+
