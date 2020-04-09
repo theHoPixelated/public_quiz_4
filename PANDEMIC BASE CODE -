@@ -24,7 +24,77 @@ def display():
                                          font = ('Helvetica', 30))
 
 
+def california_cases(day:int) -> int:
+    '''
+    starts with one infected person
+    cases increase by the day
+    returns the current number of cases based on the day
+    '''
+    
 
+def us_cases() -> list:
+    '''
+    we might or might now work on this is we have time
+    '''
+
+def social_distance(days:int) -> int:
+    '''
+    calculates the number of days need to be in social distance
+    before it is safe to go out again
+    '''
+
+def days_left() -> int():
+    '''
+    calculates the chance of you getting sick
+    using random
+    random is the number you must get to be sick
+    if it is higher than the number of matches, you get sick
+    '''
+    
+
+def calculations() -> list:
+    list_calc = []
+    list_calc.append(california_cases())
+    list_calc.append(us_cases())
+    list_calc.append(self_isolation())
+    list_calc.append(days_left())
+    return list_calc
+
+
+
+def greetings():
+    '''
+    greets the user
+    on the screen
+    '''
+
+def choices(option:str) -> bool:
+    '''
+    checks the output of make_a_decision() and returns true if valid
+    '''
+
+def make_a_decision() -> str:
+    '''
+    prompts the user to make a decision
+    asks the user when they would like to go on social distancing
+        for california
+    uses choices() to check for corect input
+    MIGHT: ask if the user wants to go out for essentials
+        if we have time
+    '''
+
+
+def text_outcomes(choice:list) -> str:
+    '''
+    checks the choices and recieves the calculator list.
+    creates text to display depending on the choices
+    '''
+
+
+def PANDEMIC_program():
+    greetings()
+    text_outcomes()
+    calculations()
 
 
 
