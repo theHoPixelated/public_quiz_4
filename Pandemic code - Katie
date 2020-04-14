@@ -4,6 +4,7 @@ import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
+# for better view, number of population enter should not exceed 1000
             
 def calculate_ODE():
     '''
