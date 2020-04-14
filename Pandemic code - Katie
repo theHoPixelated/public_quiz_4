@@ -1,1 +1,115 @@
+import time 
+from tkinter import *
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
 
+            
+def calculate_ODE():
+    '''
+    A function to simulate the SIR model for Spread of a disease
+    N = total population
+    S = number of susceptible individuals 
+    (currently healthy, not immune)
+    I = number of infected individuals
+    R = number of recovered individuals 
+    (immune, not get sick anymore and will not infect other individuals) 
+    '''
+    pop = pop_entry.get()
+    N = int(pop)
+    # Initial number of infected individuals I0.
+    ini_infected = ini_infected_entry.get()
+    I0 = int(ini_infected)
+    # Initial number of recovered individuals R0
+    R0 = 0
+    # Everyone else, S0, is susceptible to infection initially.
+    S0 = N - I0 - R0
+    # Transmission rate, beta (per day) [R0: 2.25, Incubation time: 5 days]
+    beta = 2.25 * 1 / 5
+    # Mean recovery rate, usually it takes 14 days to recover
+    gamma = 1./14
+    # A grid of time points: 160 days
+    t = np.linspace (0, 160, 160)
+    # Initial conditions vector
+    y0 = S0, I0, R0
+    
+    # The SIR model differential equations.    
+    def deriv(y, t, N, beta, gamma):
+        S, I, R = y
+        dSdt = -beta * S * I / N
+        dIdt = beta * S * I / N - gamma * I
+        dRdt = gamma * I
+        return dSdt, dIdt, dRdt
+
+    # Integrate the SIR equations over the time grid, t.
+    # odeint: ordinary differential equations -> solves first-order
+    # differential equations
+    # odeint takes three arguments:
+    #   - a function object returning dy/dt
+    #   - an initial condition
+    #   - a sequence of t values at which to calculate the solution
+    # The odeint return an array of values of S, I, T in the form of:
+    # Day 1: [S1, I1, R1]
+    # Day 2: [S2, I2, R2]
+    # .
+    # .
+    # .
+    # Day 160: [S160, I160, R160]
+    ret = odeint(deriv, y0, t, args=(N, beta, gamma))
+    # The .T accesses the attribute T of the object, which happens to be a
+    # NumPy array. The T attribute is the transpose of the array.
+    # So the following statement would return 3 separate arrays:
+    #   - Array 1 is S: [S1, S2, S3,..., S160]
+    #   - Array 2 is I: [I1, I2, I3,..., I160]
+    #   - Array 3 is R: [R1, R2, R3,..., R160]
+    S, I, R = ret.T
+    # find the max value in I
+    max_I = np.amax(I)
+    # find the index of max value of I
+    idx_max_I = np.argmax(I)
+    print ("The spread would peak after", idx_max_I,
+           "days with the number of case of ", round(max_I))
+    # plot the graph of SIR model
+    plot(t, S, I, R)
+    
+    
+def plot(t, S, I, R):       
+    # Plot the data on three separate curves for S(t), I(t) and R(t)
+    fig = plt.figure(facecolor='w')
+    fig.suptitle('SIR model for COVID-19')
+    ax = fig.add_subplot(111, facecolor='#dddddd', axisbelow=True)
+    ax.plot(t, S/1000, 'b', alpha=0.5, lw=2, label='Susceptible')
+    ax.plot(t, I/1000, 'r', alpha=0.5, lw=2, label='Infected')
+    ax.plot(t, R/1000, 'g', alpha=0.5, lw=2, label='Recovered with immunity')
+    ax.set_xlabel('Time /days')
+    ax.set_ylabel('Number (1000s)')
+    ax.set_ylim(0,1.2)
+    ax.yaxis.set_tick_params(length=0)
+    ax.xaxis.set_tick_params(length=0)
+    ax.grid(b=True, which='major', c='w', lw=2, ls='-')
+    legend = ax.legend()
+    legend.get_frame().set_alpha(0.5)
+    for spine in ('top', 'right', 'bottom', 'left'):
+        ax.spines[spine].set_visible(False)
+    plt.show()
+    
+
+if __name__ == "__main__":
+    root = Tk()
+    root.title("Pandemic Game")
+    # put our game window on top of other window
+    root.wm_attributes("-topmost",1)
+    label_1 = Label(root, text = "Population")
+    label_1.grid(row = 0, column = 0, sticky = "ew")
+    pop_entry = Entry(root)
+    pop_entry.grid(row = 0, column = 1, sticky = "ew")
+    
+    label_2 = Label(root, text = "Initial infected")
+    label_2.grid(row = 1, column = 0, sticky = "ew")
+    ini_infected_entry = Entry(root)
+    ini_infected_entry.grid(row = 1, column = 1, sticky = "ew")
+
+    graph_button = Button(root, text="Graph", command=calculate_ODE)
+    graph_button.grid(row = 4, column = 0)
+    root.mainloop()
+    
