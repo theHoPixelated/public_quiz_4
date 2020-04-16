@@ -1,1 +1,78 @@
 
+# Hoang
+import os
+global total_case, total_recover, new_rate, recover_rate, recover_time
+
+def greeting():
+    state = input("What state you want to check information (intialism)? ") #ask user about the state they want to see information from resource
+
+    #show recent information from the list
+    print(state + " infomation: ")
+    print("Population: ")
+    print("Confirmed case: ")
+    print("Confirmed rate: ")
+    print("Recover case: ")
+    print("Recover rate: ")
+
+    #update information if use need
+    update = input("Do you want to update new information? (y/n): ")
+    assert (update == 'y'
+                or update == 'n'),("Invalid input. Please try again")
+
+    if (update == 'y'):
+        new_infomation()
+    else:
+        print("Have a nice day")
+
+def new_infomation():
+    confirmed_case = int(input("Please enter the case from yesterday: "))
+    new_case = int(input("Please enter the new case: "))
+    recover = int(input("Please enter the total recover case until now: "))
+    new_recover_case = int(input("Please enter the new recover case today: "))
+
+    total_cacse = total_confirmed_case(confirmed_case, new_case)
+    total_recover = total_recover_case(recover, new_recover_case)
+    new_rate = new_case_rate(confirmed_case, total_confirmed_case(confirmed_case, new_case))
+    recover_rate = recover_rate(total_confirmed_case(confirmed_case, new_case),
+                                total_recover_case(recover, new_recover_case))
+    recover_time = predict_recover_time(recover_rate(total_confirmed_case(confirmed_case, new_case),
+                                                     total_recover_case(recover, new_recover_case)))
+    print("Total confirmed: ", total_case)
+    print("New_case_rate: ", new_rate, "%")
+    print("Total recover case: ", total_recover)
+    print("New recover rate: ", recover_rate)
+    print("The disease will be gone after: ",recover_time," day.")
+
+def total_confirmed_case(confirmed_case:int, new_case:int) -> int:
+
+    return confirmed_case + new_case
+
+def total_recover_case(recover:int, new_recover_case:int) -> int:
+
+    return recover + new_recover_case
+
+def new_case_rate(confirmed_case:int, total_confirmed_case:int) -> float:
+
+    new_case_rate = (total_confirmed_case / confirmed_case) * 100
+
+    return new_case_rate
+
+def recover_rate(total_confirmed_case:int, total_recover_case:int) -> float:
+
+    #cal from recover case / confirmed case
+    new_recover_rate = (total_recover_case / total_confirmed_case) * 100
+
+    return new_recover_rate
+
+# predict recover time in population
+def predict_recover_time(recover_rate:float) -> float:
+
+    last_recover_rate = 8 #will change by last rate from resource
+
+    predict_time = (100 / ((last_recover_rate + recover_rate) / 2)) #average of new and old rate by %
+
+    return predict_time
+
+#missing function to update new information into the resource file, will update when we have resource file
+if __name__ == "__main__":
+    greeting()
