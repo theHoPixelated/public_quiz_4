@@ -181,7 +181,7 @@ if __name__ == "__main__":
         search_list = []
         word = text.split(" ") #break string into single word to compare
         search_list.append(word) #store those word as a list
-        data_list = import_file("song1.txt") #import data we can change it to another file
+        data_list = import_file("FAQ.txt") #import data we can change it to another file
         
         showinfo("FAQs box", "This is may help you:%s"%compare(data_list,search_list))
 
