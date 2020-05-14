@@ -1,0 +1,3 @@
+"Q: Why isn't my answer running?\n A: Did you try pressing enter? If pressing enter does not solve your problem, please restart.\n\n"
+"Q: What do the colored dots each represent?\n A: Please refer to the Graphics Key on the User Guide.\n\n"
+"Q: How accurate are these predictions?\n A: Predictions are based on Covid-19 statistics provided in sources such as the World Health Organization and are updated as of May 2020."
