@@ -173,19 +173,4 @@ def compare(data:list, search:list) -> list:
     if not any(list_question):
         list_question = ["Error: Not Found. If you need assistance please "
                          + " check the FAQs page or call this number. (123)-456-7890"]
-    return list_question   
-        
-if __name__ == "__main__":
-        
-    def command(text):
-        search_list = []
-        word = text.split(" ") #break string into single word to compare
-        search_list.append(word) #store those word as a list
-        data_list = import_file("FAQ.txt") #import data we can change it to another file
-        
-        showinfo("FAQs box", "This is may help you:%s"%compare(data_list,search_list))
-
-    root = Tk()
-    SearchBox(root, command=command, placeholder="Type and press enter", entry_highlightthickness=0).pack(pady=6, padx=3)
-
-    root.mainloop()
+    return list_question         
