@@ -1,103 +1,47 @@
-# Project - Pandemic Game
+# circles that change color
 
-# pauses for effect
-import time #ex, time.sleep(3)
-
-#Tkinter
 from tkinter import *
+from GamePack import Help_Button
+from GamePack import Instructions
+from GamePack.Game_ import Text_file
+from GamePack.Game_ import *
+
+def Launch_Game_():
+    Text_file.launch_game()
+
+# make window
 window = Tk()
+window.title('Main')
+window.geometry("800x400")
+window.configure(background = 'black')
 
-# canvas size
+# Introduction
+label_1 = Label(window, text = "Virus simulation\nby Now Is the Time to Panic",
+                bd = 1, relief = "solid",
+                font = "Times 32", width = 30, height = 4, anchor = CENTER)
+label_1.place(relx=.5, rely=.5, anchor="center")
 
-def display():
-    canvas = Canvas(window, width = 700, height = 400)
-    canvas.pack()
+#create grifFrame
+gridFrame = Frame(window, bg = 'black')
 
-    white_canvas = canvas.create_rectangle(0,0,700,400, fill = 'black')
+# Start game, help, instructions
+help_but = Button(gridFrame, text = "Help",
+                  command = Help_Button.write,
+                  width = 25, height = 2)
+help_but.grid(row = 0, column = 0, pady = 10, padx = 25, sticky = W)
 
-##    screen_message = canvas.create_text(200,200, text = 'Welcome', \
-##                                    fill = 'black', font = ('Helvetica', 30))
+start_game = Button(gridFrame, text = "Start Game",
+                    command = Launch_Game_,
+                    width = 25, height = 2)
+start_game.grid(row=0, column=1, pady = 10, padx = 25, sticky=W)
 
-    
-    screen_message = canvas.create_text(350,200, text = 'Welcome '\
-                                        'to the Pandemic',  fill = 'white',\
-                                         font = ('Helvetica', 30))
+inst_but = Button(gridFrame, text = "Instructions",
+                  command = Instructions.how_to,
+                  width = 25, height = 2)
+inst_but.grid(row=0, column=2, pady = 10, padx = 25, sticky =W)
 
+#grid method
 
-def california_cases(day:int) -> int:
-    '''
-    starts with one infected person
-    cases increase by the day
-    returns the current number of cases based on the day
-    '''
-    
+gridFrame.pack(side = BOTTOM)
 
-def us_cases() -> list:
-    '''
-    we might or might now work on this is we have time
-    '''
-
-def social_distance(days:int) -> int:
-    '''
-    calculates the number of days need to be in social distance
-    before it is safe to go out again
-    '''
-
-def days_left() -> int():
-    '''
-    calculates the chance of you getting sick
-    using random
-    random is the number you must get to be sick
-    if it is higher than the number of matches, you get sick
-    '''
-    
-
-def calculations() -> list:
-    list_calc = []
-    list_calc.append(california_cases())
-    list_calc.append(us_cases())
-    list_calc.append(self_isolation())
-    list_calc.append(days_left())
-    return list_calc
-
-
-
-def greetings():
-    '''
-    greets the user
-    on the screen
-    '''
-
-def choices(option:str) -> bool:
-    '''
-    checks the output of make_a_decision() and returns true if valid
-    '''
-
-def make_a_decision() -> str:
-    '''
-    prompts the user to make a decision
-    asks the user when they would like to go on social distancing
-        for california
-    uses choices() to check for corect input
-    MIGHT: ask if the user wants to go out for essentials
-        if we have time
-    '''
-
-
-def text_outcomes(choice:list) -> str:
-    '''
-    checks the choices and recieves the calculator list.
-    creates text to display depending on the choices
-    '''
-
-
-def PANDEMIC_program():
-    greetings()
-    text_outcomes()
-    calculations()
-
-
-
-if __name__ == "__main__":
-    display()
-    window.mainloop()
+window.mainloop()
