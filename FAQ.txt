@@ -1,7 +1,7 @@
-"Q: Why isn't my answer running?\n A: Did you try pressing enter? If pressing enter does not solve your problem, please restart.\n\n"
-"Q: What do the colored dots each represent?\n A: Please refer to the Graphics Key on the User Guide.\n\n"
-"Q: How accurate are these predictions?\n A: Predictions are based on Covid-19 statistics provided in sources such as the World Health Organization and are updated as of May 2020."
-"Q: Where did you get the idea to make this program?\n A: We derive our ideas from predicting community infection of the social distancing implemented or not. The effectiveness of social distancing is still under study, so we came up with the idea of the program as part of the prediction.\n\n" 
-"Q: Can I change the color of the dots?\n A: In the current version we do not have this function yet. We will improve it in later versions.\n\n"
-"Q: Why won't my sprite move?\n A: Click on the window of the simulation and make sure the window is selected, otherwise it will not move.\n\n"
-"Q: How do I move my sprite?\n A: Press on the arrow keys for each direction. Right for right, etc.\n\n"
+Q: Why isn't my answer running? A: Did you try pressing enter? If pressing enter does not solve your problem, please restart.
+Q: What do the colored dots each represent? A: Please refer to the Graphics Key on the User Guide.
+Q: How accurate are these predictions? A: Predictions are based on Covid-19 statistics provided in sources such as the World Health Organization and are updated as of May 2020.
+Q: Where did you get the idea to make this program? A: We derive our ideas from predicting community infection of the social distancing implemented or not. The effectiveness of social distancing is still under study, so we came up with the idea of the program as part of the prediction.
+Q: Can I change the color of the dots? A: In the current version we do not have this function yet. We will improve it in later versions.
+Q: Why won't my sprite move? A: Click on the window of the simulation and make sure the window is selected, otherwise it will not move.
+Q: How do I move my sprite? A: Press on the arrow keys for each direction. Right for right, etc.
