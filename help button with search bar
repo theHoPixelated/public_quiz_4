@@ -13,8 +13,7 @@ def write():
         word = text.split(" ") #break string into single word to compare
         search_list.append(word) #store those word as a list
         data_list = import_file("FAQ.txt") #import data we can change it to another file
-        
-        showinfo("FAQs box", "This is may help you:%s"%compare(data_list,search_list))
+        compare(data_list,search_list)
 
     SearchBox(root, command=command, placeholder="Type your question and press enter", entry_highlightthickness=0).pack(pady=6, padx=3)
     
