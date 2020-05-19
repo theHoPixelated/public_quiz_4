@@ -1,0 +1,103 @@
+'''
+CHANGED: [PAGE 2]
+a) radiobutton -> checkbuttons (so that each has its own variable)
+b) user/ball starts @ low risk, moves right with each checked factor
+c) added submit button
+d) ball now moves with each checked factor
+
+TO DO: [Page 2]
+(1) def submit() or def disable() - use destroy(), pack_forget()), or
+b.config(state=disabled) to grey out checkboxes/submit after hitting submit
+(otherwise, if user keeps hitting submit, it will keep moving right)
+>> can't figure it out though...
+
+(2) add refresh button - clears selections/checkboxes, allows user to start over
+
+(3) link def move_right() to actual data, so each factor (age, gender, etc) should
+have a different/unique impact on the ball's movement
+
+(4) opt* - after submit, print (in new popup window) more detailed info/stats
+'''
+import tkinter as tk
+
+
+class InfectGUI:
+
+    def __init__(self, root):
+        self.root = root
+        self.travel = tk.IntVar()
+        self.health = tk.IntVar()
+        self.age = tk.IntVar()
+        self.gender = tk.IntVar()
+        self.b1 = tk.Checkbutton()
+        self.b2 = tk.Checkbutton()
+        self.b3 = tk.Checkbutton()
+        self.b4 = tk.Checkbutton()
+        self.sub = tk.Button()
+        w, h = 500, 130
+        self.canvas = tk.Canvas(self.root, width=w,
+                                height=h, relief='raised', borderwidth=3)
+        self.canvas.pack(side='top', fill=tk.X)
+
+        self.canvas.create_line(0, 50, w, 50)
+
+        self.c1 = self.canvas.create_oval(23, 39, 42, 58, fill='light yellow')
+        low_risk = self.canvas.create_text(37, 50, fill="dark green",
+                                           font="Times 15 italic bold",
+                                           text="LOW\n\nRISK")
+        high_risk = self.canvas.create_text(463, 50, fill="dark red",
+                                            font="Times 15 italic bold",
+                                            text="HIGH\n\nRISK")
+
+        self.prompts()
+
+    def prompts(self):
+        prompts = ['Traveled Recently',
+                   'Pre-existing Health Condition(s)',
+                   '65 Years Old or Older',
+                   'Male']
+
+        factors = [self.travel, self.health, self.age, self.gender]
+
+        i = 0
+        tk.Label(self.root, text='Check all boxes that apply').pack()
+        for p in prompts:
+            self.label = tk.Label(self.root, text=p, justify=tk.LEFT, padx=20).pack()
+            self.button = tk.Checkbutton(self.root, padx=20,
+                            variable=factors[i], state=tk.NORMAL, command=self.disable).pack()
+            i += 1
+        sub = tk.Button(self.root, text='submit', command=self.submit).pack()
+
+    def submit(self):
+        value = [self.travel.get(), self.health.get(), self.age.get(), self.gender.get()]
+        i = 0
+        for v in value:
+            if v == 1:
+                self.move_right()
+            i += 1
+
+    def disable(self):
+        if self.travel.get() == 1:
+            self.b1.configure(state='disabled')
+        elif self.health.get() == 1:
+            self.b2.configure(state='disabled')
+        elif self.age.get() == 1:
+            self.b3.configure(state='disabled')
+        elif self.gender.get() == 1:
+            self.b4.configure(state='disabled')
+
+    def move_right(self):
+        current = [round(x) for x in (self.canvas.coords(self.c1))]
+        current[0] = current[0] + 50
+        current[2] = current[2] + 50
+        self.canvas.coords(self.c1, current)
+
+def start():
+    root = tk.Tk()
+    root.title('RISK ASSESSMENT')
+    infect = InfectGUI(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    start()
