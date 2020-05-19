@@ -169,8 +169,11 @@ def compare(data:list, search:list) -> list:
                     count += 1
                 if(count >= 1):
                     list_question.append(each)
+                    list_question.append('\n')
                     count = 0
     if not any(list_question):
         list_question = ["Error: Not Found. If you need assistance please "
                          + " check the FAQs page or call this number. (123)-456-7890"]
-    return list_question         
+                         
+    str_final = ' '.join([str(each) for item in list_question for each in item])
+    showinfo("FAQs box", "This is may help you:\n %s"%str_final)
