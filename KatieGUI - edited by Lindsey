@@ -1,0 +1,242 @@
+'''
+CHANGED: [PAGE 2]
+a) radiobutton -> checkbuttons (so that each has its own variable)
+b) user/ball starts @ low risk, moves right with each checked factor
+c) added submit button
+d) updated colors, etc
+e) ball now moves with each checked factor
+
+TO DO: [Page 2]
+(1) def submit() or def disable() - use destroy(), pack_forget()), or
+b.config(state=disabled) to grey out checkboxes/submit after hitting submit
+(otherwise, if user keeps hitting submit, it will keep moving right)
+>> can't figure it out though...
+
+(2) add refresh button - clears selections/checkboxes, allows user to start over
+
+(3) link def move_right() to actual data, so each factor (age, gender, etc) should
+have a different/unique impact on the ball's movement
+
+(4) opt* - after submit, print (in new popup window) more detailed info/stats
+'''
+from tkinter import *
+from tkinter import ttk
+import time
+
+LARGE_FONT = ("Helvetica", 12)
+BG_COLOR = 'black'
+BUTTON_FONT = ("system", 8, "bold")
+
+
+class Pandemic(Tk):
+
+    def __init__(self, *args, **kwargs):
+        Tk.__init__(self, *args, **kwargs)
+        self.title("Now is the time to panic!")
+        self.geometry("500x500")
+        container = Canvas(self, bg=BG_COLOR)
+
+        container.pack(side="top", fill="both", expand=True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.canvases = {}
+
+        for c in (StartPage, PageOne, PageTwo):
+            canvas = c(container, self)
+            self.canvases[c] = canvas
+            canvas.grid(row=0, column=0, sticky="nsew")
+
+        self.show_canvas(StartPage)
+
+    def show_canvas(self, cont):
+        canvas = self.canvases[cont]
+        Misc.lift(canvas)
+
+
+# function to print letter by letter
+def printString(canvas, item, string):
+    if item:
+        for char in string:
+            idx = canvas.index(item, END)
+            canvas.insert(item, idx, char)
+            canvas.update()
+            time.sleep(.06)
+
+
+class StartPage(Canvas):
+    '''
+    Starting page:
+    - Greeting users
+    - Buttons to visit different pages of the game
+    '''
+    WELCOME_TEXT = "WELCOME TO PANIC AGE AND TIME!\n" \
+                   "Find out your chance of contracting COVID-19!" \
+                   "How long do you have to stay at home?"
+
+    WELCOME_TEXT_FONT = ("system", 9, "bold")
+
+    def __init__(self, parent, controller):
+        Canvas.__init__(self, parent)
+
+        self.configure(bg=BG_COLOR, bd=0, highlightthickness=0)
+
+        # button to jump to page
+        button1 = Button(self, text="Visit Page 1",
+                         font=BUTTON_FONT, bd=2, bg="yellow",
+                         command=lambda: controller.show_canvas(PageOne))
+        button1.pack()
+        button1.place_configure(x=20, y=350)
+
+        button2 = Button(self, text="Visit Page 2",
+                         font=BUTTON_FONT, bd=2, bg='DarkOrange2',
+                         command=lambda: controller.show_canvas(PageTwo))
+        button2.pack()
+        button2.place_configure(x=120, y=350)
+
+        # Display welcome text
+        text_1 = "WELCOME TO A PANIC AGE AND TIME!"
+        c_text = self.create_text(230, 100, width=300,
+                                  fill='lawn green',
+                                  font=self.WELCOME_TEXT_FONT, )
+        self.pack()
+        self.update()
+        printString(self, c_text, text_1)
+
+        text_2 = "Find out your chance of contracting COVID-19"
+        c_text = self.create_text(230, 130, width=300,
+                                  fill='lawn green',
+                                  font=self.WELCOME_TEXT_FONT, )
+        self.pack()
+        self.update()
+        printString(self, c_text, text_2)
+
+        text_3 = "and how long you have to stay at home!"
+        c_text = self.create_text(230, 160, width=300,
+                                  fill='lawn green',
+                                  font=self.WELCOME_TEXT_FONT, )
+
+        self.pack()
+        self.update()
+        printString(self, c_text, text_3)
+
+
+class PageOne(Canvas):
+    TEXT_FONT = ('Helvetica', 9, 'bold')
+
+    def __init__(self, parent, controller):
+        Canvas.__init__(self, parent)
+        # set as attributes in order to call in functions below
+        self.travel = IntVar()
+        self.health = IntVar()
+        self.age = IntVar()
+        self.gender = IntVar()
+        self.b1 = Checkbutton()
+        self.b2 = Checkbutton()
+        self.b3 = Checkbutton()
+        self.b4 = Checkbutton()
+
+        # updated bg/font for pg2
+        self.bg_c = "MediumPurple1"
+        self.font_1 = "Arial 10 bold"
+
+        # establish frame for risk assessment prompts
+        self.frame = Frame(self, bg=self.bg_c)
+        self.frame.pack(fill="both", expand=True)
+        self.frame.place_configure(x=120, y=115)
+        self.configure(bg=self.bg_c, bd=0, highlightthickness=0)
+
+        # establish base graphics, starting at 0 or low risk
+        header_1 = self.create_text(30, 50, fill="SeaGreen2",
+                                    font="Impact 17 italic",
+                                    text="LOW\n\nRISK")
+        header_2 = self.create_text(470, 50, fill="IndianRed1",
+                                    font="Impact 17 italic",
+                                    text="HIGH\n\nRISK")
+        self.create_line(0, 50, 500, 50, fill='black', width=3)
+        self.c1 = self.create_oval(23, 39, 42, 58, fill="gold")
+
+        # buttons to visit other pages
+        home_b = Button(self, text="Home",
+                         font=BUTTON_FONT, bg="lemon chiffon",
+                         command=lambda: controller.show_canvas(StartPage))
+        home_b.pack()
+        home_b.place_configure(x=350, y=450)
+
+        pg2_b = Button(self, text="Page Two",
+                         font=BUTTON_FONT, bg='pale turquoise',
+                         command=lambda: controller.show_canvas(PageTwo))
+        pg2_b.pack()
+        pg2_b.place_configure(x=410, y=450)
+
+        self.prompts(self)
+
+    # prompts user for input for high-risk infection factors
+    def prompts(self, parent):
+        # title of page & instructions
+        Label(self.frame, text="Risk Assessment", bg=self.bg_c, font="Verdana 14 bold").pack()
+        Label(self.frame, text='To calculate your chances of\nbecoming infected with Covid-19,'
+                               '\ncheck all boxes below that apply.', bg=self.bg_c,  fg="white",
+              font="Verdana 10", padx=10).pack()
+
+        # prints prompts, checkboxes, submit button - each checkbox assigned unique variable
+        # TO DO: (elsewhere) calculate infection chances using data & update move_right accord
+        prompts = ['Traveled Recently', 'Pre-existing Health Condition(s)',
+                   '65 Years Old or Older', 'Male']
+        factors = [self.travel, self.health, self.age, self.gender]
+        i = 0
+        for p in prompts:
+            label = Label(self.frame, text=p, bg=self.bg_c, fg="white",
+                          font=self.font_1, padx=10).pack()
+            button = Checkbutton(self.frame, bg=self.bg_c, fg="black", font = self.font_1, padx=10,
+                                 variable=factors[i], state=NORMAL, command=self.disable).pack()
+            i += 1
+        sub = Button(self.frame, text='SUBMIT', command=self.submit).pack()
+
+    # finds all checked boxes & moves ball right 1x for each check
+    def submit(self):
+        value = [self.travel.get(), self.health.get(), self.age.get(), self.gender.get()]
+        i = 0
+        for v in value:
+            if v == 1:
+                self.move_right()
+            i += 1
+
+    # moves ball right, indicating increased risk of infection
+    # - currently moves an arbitrary, uniform amt
+    def move_right(self):
+        current = [round(x) for x in (self.coords(self.c1))]
+        current[0] = current[0] + 50
+        current[2] = current[2] + 50
+        self.coords(self.c1, current)
+
+    # ATTEMPT: supposed to cause checkboxes to grey out/disable, not working tho
+    def disable(self):
+        if self.travel.get() == 1:
+            self.b1.configure(state='disabled')
+        elif self.health.get() == 1:
+            self.b2.configure(state='disabled')
+        elif self.age.get() == 1:
+            self.b3.configure(state='disabled')
+        elif self.gender.get() == 1:
+            self.b4.configure(state='disabled')
+
+
+class PageTwo(Canvas):
+
+    def __init__(self, parent, controller):
+        Canvas.__init__(self, parent)
+
+        label = Label(self, text="Page Two", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+        button1 = Button(self, text="Back to Home", font=BUTTON_FONT,
+                         command=lambda: controller.show_canvas(StartPage))
+        button1.pack()
+        button2 = Button(self, text="Page One", font=BUTTON_FONT,
+                         command=lambda: controller.show_canvas(PageOne))
+        button2.pack()
+
+
+app = Pandemic()
+app.mainloop()
