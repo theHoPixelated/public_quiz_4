@@ -5,3 +5,8 @@ Q: Where did you get the idea to make this program? A: We derive our ideas from 
 Q: Can I change the color of the dots? A: In the current version we do not have this function yet. We will improve it in later versions.
 Q: Why won't my sprite move? A: Click on the window of the simulation and make sure the window is selected, otherwise it will not move.
 Q: How do I move my sprite? A: Press on the arrow keys for each direction. Right for right, etc.
+Q: How can I start the game? A: You can follow the step (1) on User guide file inside the game folder.
+Q: What can I do beside the game? A: We have 4 challenges what you can play. They may be more than 4 on next update.
+Q: How can I play Cash challenge? A: You can see the step (3) on User guide to know how to play this challenge.
+Q: How can I play Boredom Ensues challenge? A: You can see the step (4) on User guide to know how to play this challenge.
+Q: How can I win this game? A: You can win or lose depend on your point you have at the end of game. You can check the step (1) on User guide to know your position at the end.
