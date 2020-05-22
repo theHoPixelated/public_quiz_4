@@ -1,6 +1,8 @@
 # Project 6
 from tkinter import *
-from search_bar_v3 import *
+from GamePack import search_bar_v3
+from GamePack.search_bar_v3 import *
+from pathlib import Path
 
 """Button would be placed on side, after welcome screen"""
 """User would be inputting their initial stats/info."""
@@ -8,16 +10,23 @@ from search_bar_v3 import *
 
 # Sets content & parameters for Help button's print statement
 def write():
+    root = Tk()
+    root.title("Help and FAQs")
+    root.geometry("350x500")
+    root.configure(background = 'black')
+    frame = Frame(root)
+    frame.pack()
+    
     def command(text):
         search_list = []
         word = text.split(" ") #break string into single word to compare
         search_list.append(word) #store those word as a list
-        data_list = import_file("FAQ.txt") #import data we can change it to another file
+        data_list = import_file(Path("GamePack/FAQ.txt")) #import data we can change it to another file
         compare(data_list,search_list)
 
     SearchBox(root, command=command, placeholder="Type your question and press enter", entry_highlightthickness=0).pack(pady=6, padx=3)
     
-    m = Message(text="INSTRUCTIONS:\nTo calculate your chances of becoming "
+    m = Message(root,text="INSTRUCTIONS:\nTo calculate your chances of becoming "
                      "infected with corona virus, simply answer the first set "
                      "of questions. For your reference, pre-existing "
                      "conditions include diabetes, asthma, and cancer."
@@ -25,20 +34,10 @@ def write():
                      "as the number of days needed in social distancing "
                      "on the next screen.", fg='black',
                 font=('Tahoma', 13))
-    m1 = Message(text="TECH SUPPORT HOTLINE:999-999-9999",
+    m1 = Message(root,text="TECH SUPPORT HOTLINE:999-999-9999",
                  fg='grey', font=('Impact', 25))
 
-    m.pack()
-    m1.pack()
+    m.pack(side = 'top')
+    m1.pack(side = 'top')
 
-# Creates main window
-root = Tk()
-frame = Frame(root)
-frame.pack()
-
-# Creates button, specifies graphical details
-b = Button(frame, text='HELP', fg='light green',
-           font=('times', 25, 'bold italic'), command=write)
-b.pack(side=LEFT)
-
-root.mainloop()
+    root.mainloop()
