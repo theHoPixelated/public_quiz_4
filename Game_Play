@@ -1,174 +1,177 @@
 from tkinter import *
 import random
 
-CANVAS_WIDTH = 600
-CANVAS_HEIGHT = 600
-CANVAS_MIDDLE = 300
+def Start_Game():
+    CANVAS_WIDTH = 600
+    CANVAS_HEIGHT = 600
+    CANVAS_MIDDLE = 300
 
-window = Tk()
-window.title("Time to Panic")
+    window = Tk()
+    window.title("Time to Panic")
 
-canvas = Canvas(window, width = CANVAS_WIDTH, height = CANVAS_HEIGHT,
-                bg = "black", bd = 0, highlightthickness = 0,
-                relief = "ridge")
-canvas.pack()
+    canvas = Canvas(window, width = CANVAS_WIDTH, height = CANVAS_HEIGHT,
+                    bg = "black", bd = 0, highlightthickness = 0,
+                    relief = "ridge")
+    canvas.pack()
 
-title = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE - 40,
-                           text= 'Click on this window to play',
-                           fill='white', font = ('Helvetica', 30))
-directions = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE + 30,
-                                text= 'Avoid the red dots' \
-    ' with your arrow keys', fill='white', font = ('Helvetica', 17))
+    title = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE - 40,
+                               text= 'Click on this window to play',
+                               fill='white', font = ('Helvetica', 30))
+    directions = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE + 30,
+                                    text= 'Avoid the red dots' \
+        ' with your arrow keys', fill='white', font = ('Helvetica', 17))
 
-score = 0
-score_display = Label(window,  text="Score :" + str(score))
-score_display.pack()
+##    score = 0
+##    score_display = Label(window,  text="Score :" + str(score))
+##    score_display.pack()
+##
+##    level = 1
+##    level_display = Label(window, text="Level :" + str(level))
+##    level_display.pack()
 
-level = 1
-level_display = Label(window, text="Level :" + str(level))
-level_display.pack()
+    mychar = canvas.create_oval(CANVAS_MIDDLE -5,CANVAS_MIDDLE -5,
+                                CANVAS_MIDDLE +5,CANVAS_MIDDLE +5,
+                                fill = "lightgreen")
 
-mychar = canvas.create_oval(CANVAS_MIDDLE -5,CANVAS_MIDDLE -5,
-                            CANVAS_MIDDLE +5,CANVAS_MIDDLE +5,
-                            fill = "lightgreen")
+    bad_ball_list = []
+    safe_ball_list = []
+    ball_color_list = ['lightblue', 'red']
+    run_int = [-2, -1, 1, 2]
 
-bad_ball_list = []
-safe_ball_list = []
-ball_color_list = ['lightblue', 'red']
-run_int = [-2, -1, 1, 2]
+    def make_ball():
+        for _ in range(100):
+            xposition = random.randint(5, 550)
+            yposition = random.randint(5, 550)
+            ball_color = random.choice(ball_color_list)
+            vx = random.choice(run_int)
+            vy = random.choice(run_int)
+            run = [vx,vy]
+            
+            if ball_color == 'red' :
+                bball = canvas.create_oval(xposition - 5, yposition - 5,
+                                           xposition+5, yposition + 5,
+                                           fill = ball_color)
+                bball_speed = [bball, run]
+                bad_ball_list.append(bball_speed)
+            else:
+                sball = canvas.create_oval(xposition - 5, yposition - 5,
+                                           xposition+5, yposition + 5,
+                                           fill = ball_color)
+                sball_speed = [sball, run]
+                safe_ball_list.append(sball_speed)
 
-def make_ball():
-    for _ in range(100):
-        xposition = random.randint(5, 550)
-        yposition = random.randint(5, 550)
-        ball_color = random.choice(ball_color_list)
-        vx = random.choice(run_int)
-        vy = random.choice(run_int)
-        run = [vx,vy]
-        
-        if ball_color == 'red' :
-            bball = canvas.create_oval(xposition - 5, yposition - 5,
-                                       xposition+5, yposition + 5,
-                                       fill = ball_color)
-            bball_speed = [bball, run]
-            bad_ball_list.append(bball_speed)
-        else:
-            sball = canvas.create_oval(xposition - 5, yposition - 5,
-                                       xposition+5, yposition + 5,
-                                       fill = ball_color)
-            sball_speed = [sball, run]
-            safe_ball_list.append(sball_speed)
-
-def move_ball():
-    for sball_speed in safe_ball_list:
-        canvas.move(sball_speed[0], sball_speed[1][0], sball_speed[1][1])
-        position = canvas.coords(sball_speed[0])
-        if position[1] > 590 or position[1] < 5:
-            sball_speed[1][1] = -sball_speed[1][1]
-        if position[0] > 595 or position[0] < 5:
-            sball_speed[1][0] = -sball_speed[1][0]
-    for bball_speed in bad_ball_list:
-        canvas.move(bball_speed[0], bball_speed[1][0], bball_speed[1][1])
-        position = canvas.coords(bball_speed[0])
-        if position[1] > 590 or position[1] < 5:
-            bball_speed[1][1] = -bball_speed[1][1]
-        if position[0] > 595 or position[0] < 5:
-            bball_speed[1][0] = -bball_speed[1][0]
-    window.after(40, move_ball)
-
-def update_score_level():
-    global score, level
-    score = score + 1
-    score_display.config(text="Score :" + \
-    str(score))
-    if score > 25 and score <= 50:
-        level = 2
-        level_display.config(text="Level :" + \
-        str(level))
-    elif score > 50:
-        level = 3
-        level_display.config(text="Level :" + \
-        str(level))
-
-def end_game_over():
-    window.destroy()
-
-def collision(item1, item2, distance):
-    xdistance = abs(canvas.coords(item1)[0] - canvas.coords(item2)[0])
-    ydistance = abs(canvas.coords(item1)[1] - canvas.coords(item2)[1])
-    overlap = xdistance < distance and ydistance < distance
-    return overlap
-
-def end_title():
-    canvas.delete(title) # remove title
-    canvas.delete(directions)
-
-def make_red(sball_speed, xposition, yposition):
-    bball = canvas.create_oval(xposition - 5, yposition - 5,
-                               xposition + 5, yposition + 5,
-                                fill = 'red')
-    new_vx = random.choice(run_int)
-    new_vy = random.choice(run_int)
-    list_speed = [new_vx, new_vy]
-    bball_speed = [bball, list_speed]
-    bad_ball_list.append(bball_speed)
-    
-
-def check_hits():
-    for bball_speed in bad_ball_list:
-        if collision(mychar, bball_speed[0], 10):
-            game_over = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE,
-                                           text= 'Game over', fill='red',
-                                           font = ('Helvetica', 30))
-            window.after(2000, end_game_over)
-    for bball_speed in bad_ball_list:
+    def move_ball():
         for sball_speed in safe_ball_list:
-            if collision(bball_speed[0], sball_speed[0], 10):
-                update_score_level()
-                # how to delete the blue dots?
-                safe_ball_list.remove(sball_speed)
-                canvas.delete(sball_speed)
-                make_red(sball_speed[0], canvas.coords(sball_speed[0])[0],
-                         canvas.coords(sball_speed[0])[1])
-    window.after(500, check_hits)
+            canvas.move(sball_speed[0], sball_speed[1][0], sball_speed[1][1])
+            position = canvas.coords(sball_speed[0])
+            if position[1] > 590 or position[1] < 5:
+                sball_speed[1][1] = -sball_speed[1][1]
+            if position[0] > 595 or position[0] < 5:
+                sball_speed[1][0] = -sball_speed[1][0]
+        for bball_speed in bad_ball_list:
+            canvas.move(bball_speed[0], bball_speed[1][0], bball_speed[1][1])
+            position = canvas.coords(bball_speed[0])
+            if position[1] > 590 or position[1] < 5:
+                bball_speed[1][1] = -bball_speed[1][1]
+            if position[0] > 595 or position[0] < 5:
+                bball_speed[1][0] = -bball_speed[1][0]
+        window.after(40, move_ball)
 
-move_direction = 0
-def check_input(event):
-    global move_direction
-    key = event.keysym
-    if key == "Right":
-        move_direction = "Right"
-    elif key == "Left":
-        move_direction = "Left"
-    elif key == "Up":
-        move_direction = "Up"
-    elif key == "Down":
-        move_direction = "Down"
+    def update_score_level():
+        global score, level
+        score = score + 1
+        score_display.config(text="Score :" + \
+        str(score))
+        if score > 25 and score <= 50:
+            level = 2
+            level_display.config(text="Level :" + \
+            str(level))
+        elif score > 50:
+            level = 3
+            level_display.config(text="Level :" + \
+            str(level))
 
-def end_input(event):
-    global move_direction
-    move_direction = "None"
+    def end_game_over():
+        window.destroy()
 
-def move_character():
-    if move_direction == "Right" and canvas.coords(mychar)[0] < 585:
-        canvas.move(mychar, 10,0)
-    if move_direction == "Left" and canvas.coords(mychar)[0] > 10 :
-        canvas.move(mychar, -10,0)
-    if move_direction == "Up" and canvas.coords(mychar)[1] > 10 :
-        canvas.move(mychar, 0, -10)
-    if move_direction == "Down" and canvas.coords(mychar)[1] < 585 :
-        canvas.move(mychar, 0, 10)
-    window.after(30, move_character)
+    def collision(item1, item2, distance):
+        xdistance = abs(canvas.coords(item1)[0] - canvas.coords(item2)[0])
+        ydistance = abs(canvas.coords(item1)[1] - canvas.coords(item2)[1])
+        overlap = xdistance < distance and ydistance < distance
+        return overlap
 
-canvas.bind_all('<KeyPress>', check_input) 
-canvas.bind_all('<KeyRelease>', end_input)
+    def end_title():
+        canvas.delete(title) # remove title
+        canvas.delete(directions)
 
-    
-window.after(1000, end_title) 
-window.after(1000, make_ball) 
-window.after(1000, move_ball) 
-window.after(1000, check_hits) 
-window.after(1000, move_character)
+    def make_red(sball_speed, xposition, yposition):
+        bball = canvas.create_oval(xposition - 5, yposition - 5,
+                                   xposition + 5, yposition + 5,
+                                    fill = 'red')
+        new_vx = random.choice(run_int)
+        new_vy = random.choice(run_int)
+        list_speed = [new_vx, new_vy]
+        bball_speed = [bball, list_speed]
+        bad_ball_list.append(bball_speed)
+        
+
+    def check_hits():
+        for bball_speed in bad_ball_list:
+            if collision(mychar, bball_speed[0], 10):
+                game_over = canvas.create_text(CANVAS_MIDDLE, CANVAS_MIDDLE,
+                                               text= 'Game over', fill='red',
+                                               font = ('Helvetica', 30))
+                window.after(2000, end_game_over)
+        for bball_speed in bad_ball_list:
+            for sball_speed in safe_ball_list:
+                if collision(bball_speed[0], sball_speed[0], 10):
+                    #update_score_level()
+                    # how to delete the blue dots?
+                    safe_ball_list.remove(sball_speed)
+                    canvas.delete(sball_speed)
+                    make_red(sball_speed[0], canvas.coords(sball_speed[0])[0],
+                             canvas.coords(sball_speed[0])[1])
+        window.after(500, check_hits)
+
+    move_direction = 0
+    def check_input(event):
+        global move_direction
+        key = event.keysym
+        if key == "Right":
+            move_direction = "Right"
+        elif key == "Left":
+            move_direction = "Left"
+        elif key == "Up":
+            move_direction = "Up"
+        elif key == "Down":
+            move_direction = "Down"
+
+    def end_input(event):
+        global move_direction
+        move_direction = "None"
+
+    def move_character():
+        if move_direction == "Right" and canvas.coords(mychar)[0] < 585:
+            canvas.move(mychar, 10,0)
+        if move_direction == "Left" and canvas.coords(mychar)[0] > 10 :
+            canvas.move(mychar, -10,0)
+        if move_direction == "Up" and canvas.coords(mychar)[1] > 10 :
+            canvas.move(mychar, 0, -10)
+        if move_direction == "Down" and canvas.coords(mychar)[1] < 585 :
+            canvas.move(mychar, 0, 10)
+        window.after(30, move_character)
+        
+
+    canvas.bind_all('<KeyPress>', lambda e: check_input(e)) 
+    canvas.bind_all('<KeyRelease>', lambda e :end_input(e))
+
+        
+    window.after(1000, end_title) 
+    window.after(1000, make_ball) 
+    window.after(1000, move_ball) 
+    window.after(1000, check_hits) 
+    window.after(1000, move_character)
 
 
-window.mainloop()
+    window.mainloop()
+
