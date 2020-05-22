@@ -12,7 +12,7 @@ def Launch_Game_():
 # make window
 window = Tk()
 window.title('Main')
-window.geometry("800x400")
+window.geometry("800x500")
 window.configure(background = 'black')
 
 # Introduction
@@ -40,8 +40,14 @@ inst_but = Button(gridFrame, text = "Instructions",
                   width = 25, height = 2)
 inst_but.grid(row=0, column=2, pady = 10, padx = 25, sticky =W)
 
+sim = Button(gridFrame, text = "Run a simulation",
+                  command = Game_Play.Start_Game,
+                  width = 25, height = 2)
+sim.grid(row=1, column=1, pady = 10, padx = 25, sticky =W)
+
 #grid method
 
 gridFrame.pack(side = BOTTOM)
 
 window.mainloop()
+
