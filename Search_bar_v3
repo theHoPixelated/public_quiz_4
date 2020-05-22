@@ -158,7 +158,7 @@ def import_file(filename:str) -> list:
     return list_of_word
 
 #function compare the question from search bar with the question from data
-def compare(data:list, search:list) -> list:
+def compare(data:list, search:list):
     count = 0 # count the match word from search bar and data
     list_question = [] #store all the question match with search bar
 
@@ -174,6 +174,6 @@ def compare(data:list, search:list) -> list:
     if not any(list_question):
         list_question = ["Error: Not Found. If you need assistance please "
                          + " check the FAQs page or call this number. (123)-456-7890"]
-                         
+
     str_final = ' '.join([str(each) for item in list_question for each in item])
     showinfo("FAQs box", "This is may help you:\n %s"%str_final)
