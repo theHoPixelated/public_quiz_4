@@ -1,13 +1,11 @@
 from tkinter import *
 import random
 
-def Start_Game():
-    CANVAS_WIDTH = 600
-    CANVAS_HEIGHT = 600
-    CANVAS_MIDDLE = 300
+CANVAS_WIDTH = 600
+CANVAS_HEIGHT = 600
+CANVAS_MIDDLE = 300
 
-    window = Tk()
-    window.title("Time to Panic")
+def Run_Program(window):
 
     canvas = Canvas(window, width = CANVAS_WIDTH, height = CANVAS_HEIGHT,
                     bg = "black", bd = 0, highlightthickness = 0,
@@ -21,13 +19,13 @@ def Start_Game():
                                     text= 'Avoid the red dots' \
         ' with your arrow keys', fill='white', font = ('Helvetica', 17))
 
-##    score = 0
-##    score_display = Label(window,  text="Score :" + str(score))
-##    score_display.pack()
-##
-##    level = 1
-##    level_display = Label(window, text="Level :" + str(level))
-##    level_display.pack()
+    ##    score = 0
+    ##    score_display = Label(window,  text="Score :" + str(score))
+    ##    score_display.pack()
+    ##
+    ##    level = 1
+    ##    level_display = Label(window, text="Level :" + str(level))
+    ##    level_display.pack()
 
     mychar = canvas.create_oval(CANVAS_MIDDLE -5,CANVAS_MIDDLE -5,
                                 CANVAS_MIDDLE +5,CANVAS_MIDDLE +5,
@@ -78,7 +76,6 @@ def Start_Game():
         window.after(40, move_ball)
 
     def update_score_level():
-        global score, level
         score = score + 1
         score_display.config(text="Score :" + \
         str(score))
@@ -125,8 +122,7 @@ def Start_Game():
         for bball_speed in bad_ball_list:
             for sball_speed in safe_ball_list:
                 if collision(bball_speed[0], sball_speed[0], 10):
-                    #update_score_level()
-                    # how to delete the blue dots?
+                    #update_score_level(score)
                     safe_ball_list.remove(sball_speed)
                     canvas.delete(sball_speed)
                     make_red(sball_speed[0], canvas.coords(sball_speed[0])[0],
@@ -173,5 +169,10 @@ def Start_Game():
     window.after(1000, move_character)
 
 
-    window.mainloop()
+def launch_sim():
+    Window = Tk()
+    Window.title("Time to Panic")
+    Run_Program(Window)
+
+    Window.mainloop()
 
